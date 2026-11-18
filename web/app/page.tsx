@@ -12,7 +12,6 @@ import FinalCta from '@/components/sections/FinalCta';
 import { getReviews } from '@/lib/reviews';
 import { faqs } from '@/lib/site';
 
-export const revalidate = 86400;
 
 export default async function Home() {
   const reviews = await getReviews();

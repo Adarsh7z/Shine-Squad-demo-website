@@ -4,7 +4,8 @@ Please confirm or supply each item. The site is built and working; these items t
 
 ## Needed before going live
 
-- [ ] **Where should bookings go?** An email address to receive consultation requests (and/or permission to set up a Google Sheet).
+- [ ] **Confirm the WhatsApp number** for enquiries: **+91 70131 46997**. Every "Consult on WhatsApp" message goes here.
+- [ ] *(Optional)* Should enquiries also be logged in a Google Sheet? See phase 2 in `web/README.md`.
 - [ ] **Domain name**, e.g. `shinesquad.in` (buy it, or tell us which one you own).
 - [ ] **Google Place ID / Maps API key.** We can set these up with you (free tier; about 10 minutes).
 - [ ] **Instagram profile link**, so it can be added to the footer and search data.
@@ -15,8 +16,7 @@ Please confirm or supply each item. The site is built and working; these items t
 - [ ] Hours: **Mon–Sat 10 AM – 10 PM, Sunday closed** (from Google).
 - [ ] Brands named on the site: **JBL, JL Audio, Pioneer, Moco, Turtle Wax, Top Gear** (seen on your shelves and in your videos). OK to name them?
 - [ ] "Our Car Jewel team was the first in AP & Telangana to install the **Pioneer DMH-AP6650BT**" (from your YouTube video title).
-- [ ] Success message after booking: "We'll call you during working hours to fix a time." Is that the right promise? Should we add a time, e.g. "within 2 hours"?
-- [ ] Privacy: booking details kept for up to 12 months. OK?
+- [ ] The ready-made WhatsApp message ends with "Please let me know a good time to visit." Happy with that wording?
 
 ## Nice to have (makes the site even better)
 

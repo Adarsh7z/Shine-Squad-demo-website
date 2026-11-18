@@ -27,7 +27,7 @@ export default function Hero({ rating, count }: { rating: number; count: number 
             </p>
             <div className="hero__ctas enter-fade" style={{ ['--i' as string]: 2 }}>
               <a href="#book" className="btn btn--primary btn--xl">
-                Book a consultation <ArrowRight className="arrow" aria-hidden="true" />
+                Consult now <ArrowRight className="arrow" aria-hidden="true" />
               </a>
               <a href={links.tel} className="btn btn--xl" data-track="click_call">
                 <Phone aria-hidden="true" /> Call {business.phoneDisplay}

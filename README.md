@@ -19,8 +19,9 @@ npm run dev   # http://localhost:3100
 
 ## Highlights
 
-- Hero with a **Free Car Consultation** booking bar (name + Indian mobile number), wired to `/api/lead` with spam protection and a WhatsApp follow-up
-- **Clickable Google reviews**: every card opens that exact review on Google Maps; live via the Places API when keys are set, with real saved reviews as a fallback
+- **"Consult on WhatsApp"** booking bar: name + Indian mobile number open WhatsApp with a ready-written enquiry. No backend needed; the site is fully static for Cloudflare Pages
+- **Clickable Google reviews**: every card opens that exact review on Google Maps; fetched live from Google at build time when keys are set, with real saved reviews as a fallback
+- Google Maps embed of the shop
 - Scroll-driven "What actually sits on your paint" layer story with a live water-beading demo
 - Recent builds from the Car Jewel YouTube channel, playable in place
 - 12 SEO service pages, LocalBusiness/FAQ/Service structured data, sitemap and robots

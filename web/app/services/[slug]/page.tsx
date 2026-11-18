@@ -10,7 +10,6 @@ import Faq from '@/components/sections/Faq';
 import Reviews from '@/components/sections/Reviews';
 import FinalCta from '@/components/sections/FinalCta';
 
-export const revalidate = 86400;
 export const dynamicParams = false;
 
 export function generateStaticParams() {
@@ -85,7 +84,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
               <p className="lead">{s.intro}</p>
               <div className="hero__ctas">
                 <a href="#svc-book" className="btn btn--primary btn--xl">
-                  Book a free consultation <ArrowRight className="arrow" aria-hidden="true" />
+                  Get a free consultation <ArrowRight className="arrow" aria-hidden="true" />
                 </a>
                 <a href={links.tel} className="btn btn--xl" data-track="click_call">
                   <Phone aria-hidden="true" /> {business.phoneDisplay}
@@ -93,7 +92,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
               </div>
             </div>
             <div id="svc-book">
-              <ConsultForm source={`service:${s.slug}`} />
+              <ConsultForm source={`service:${s.slug}`} service={s.name} />
             </div>
           </div>
         </div>

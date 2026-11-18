@@ -16,7 +16,7 @@ export default function FinalCta() {
         </div>
         <div className="btn-row">
           <Link href="/#book" className="btn btn--dark btn--xl">
-            Book a consultation <ArrowRight className="arrow" aria-hidden="true" />
+            Consult now <ArrowRight className="arrow" aria-hidden="true" />
           </Link>
           <a href={links.tel} className="btn btn--outline-dark btn--xl" data-track="click_call">
             <Phone aria-hidden="true" /> {business.phoneDisplay}

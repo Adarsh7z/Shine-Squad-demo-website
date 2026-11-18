@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     template: '%s | Shine Squad',
   },
   description:
-    'Ceramic, graphene & PPF protection, wraps, tints, audio, lighting and seat covers on Minister Road, Secunderabad, next to KIMS. Rated 4.8 on Google. Book a free consultation.',
+    'Ceramic, graphene & PPF protection, wraps, tints, audio, lighting and seat covers on Minister Road, Secunderabad, next to KIMS. Rated 4.8 on Google. Free consultation on WhatsApp.',
   applicationName: 'Shine Squad',
   keywords: ['ceramic coating Secunderabad', 'PPF Hyderabad', 'car accessories Minister Road', 'car seat covers Secunderabad', 'graphene coating Hyderabad', 'car window tinting Secunderabad', 'car audio Secunderabad'],
   alternates: { canonical: '/' },

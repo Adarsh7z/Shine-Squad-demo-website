@@ -101,7 +101,7 @@ type PlacesReview = {
   googleMapsUri?: string;
 };
 
-/** Live reviews from Google Places API (New), cached for 24 hours. Falls back to curated reviews. */
+/** Live reviews from Google Places API (New), fetched at build time. Falls back to curated reviews. */
 export async function getReviews(): Promise<ReviewData> {
   const key = process.env.GOOGLE_MAPS_API_KEY;
   const fallback: ReviewData = { rating: business.rating.value, count: business.rating.count, reviews: curatedReviews, source: 'curated' };
@@ -109,7 +109,7 @@ export async function getReviews(): Promise<ReviewData> {
   try {
     const res = await fetch(`https://places.googleapis.com/v1/places/${placeId}?languageCode=en`, {
       headers: { 'X-Goog-Api-Key': key, 'X-Goog-FieldMask': 'rating,userRatingCount,reviews,googleMapsUri' },
-      next: { revalidate: 86400 },
+      cache: 'force-cache', // fetched once per build; a daily Cloudflare deploy hook keeps it fresh
     });
     if (!res.ok) return fallback;
     const data = (await res.json()) as { rating?: number; userRatingCount?: number; reviews?: PlacesReview[]; googleMapsUri?: string };

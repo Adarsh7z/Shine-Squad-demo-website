@@ -2,7 +2,7 @@
 
 The website for **Shine Squad** (a unit of Car Jewel): car protection, detailing and accessories on Minister Road, Secunderabad.
 
-Built with Next.js 15 (App Router) + TypeScript, plain CSS design tokens (`app/globals.css`) and Motion for small UI transitions. All business facts live in **one file: `lib/site.ts`**.
+Built with Next.js 15 (App Router) + TypeScript as a **static export**: `npm run build` produces plain HTML, CSS, JS and images in `out/`, so it runs on Cloudflare Pages (or any static host) with no server. All business facts live in **one file: `lib/site.ts`**.
 
 ## Run it locally
 
@@ -12,70 +12,105 @@ npm install
 npm run dev          # http://localhost:3100
 ```
 
-Production build:
+Production build (creates `out/`):
 
 ```bash
-npm run build && npm start   # http://localhost:3100
+npm run build
+npx serve out        # optional: preview the exact files Cloudflare will host
 ```
 
-## What's on the site
+## How "Consult now" works (no backend)
 
-| Page | What it does |
+The consultation form checks the name and the 10-digit Indian mobile number, then opens **WhatsApp** to Shine Squad's number (+91 70131 46997) with this message ready to send:
+
+```
+Hi Shine Squad! 👋
+I'm Ravi Kumar (Phone: +91 98765 43210).
+I'd like a free consultation for my Hyundai Creta 2023.
+Interested in: Ceramic, PPF.
+Please let me know a good time to visit. Thank you!
+(Sent from the Shine Squad website)
+```
+
+- Blank details are left out. On a service page, that service is added automatically.
+- Phones open the WhatsApp app; computers open WhatsApp Web.
+- After tapping, the customer sees a preview of the message, plus a "WhatsApp didn't open? Tap here" fallback.
+- The message builder is `buildConsultMessage()` in `components/ConsultForm.tsx`.
+
+## Deploy on Cloudflare Pages
+
+1. Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git** → pick `Adarsh7z/Shine-Squad-demo-website`.
+2. Fill in:
+
+| Field | Value |
 |---|---|
-| `/` | Hero + **Free Car Consultation** booking bar, proof strip, services, the "What actually sits on your paint" layer story with a live water-beading demo, recent builds (Car Jewel YouTube videos that play in place), accessories showroom, how a visit works, **clickable Google reviews**, visit/hours/map, FAQ, final CTA |
-| `/services/[slug]` | 12 service pages (ceramic, PPF, Teflon, wraps, tint, audio, seat covers, lighting, alloys, detail spa, electrical, maintenance), each with its own SEO title, schema and consultation form |
-| `/contact` | Long-form consultation + visit block |
-| `/privacy` | Plain-language privacy note |
-| `/api/lead` | Receives consultation requests (validated, honeypot + timing spam checks, rate-limited) |
+| Production branch | `main` |
+| Framework preset | `Next.js (Static HTML Export)` |
+| Build command | `npm run build` |
+| Build output directory | `out` |
+| Root directory (advanced) | `web` |
+| Environment variable | `NODE_VERSION` = `22` |
 
-## Environment variables
+3. **Save and Deploy** (about 2–3 minutes). The site goes live at `https://<project-name>.pages.dev`.
+4. Every push to `main` redeploys automatically.
 
-Copy `.env.example` to `.env.local` (or add them in Vercel → Project → Settings → Environment Variables).
+`public/_headers` sets long-lived caching for scripts and images.
 
-| Variable | Needed for | How to get it |
-|---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | Canonical URLs, sitemap, share previews | The live domain, e.g. `https://shinesquad.in` |
-| `GOOGLE_PLACE_ID` | Live reviews, the "Write a review" link, directions pin | Search "Shine Squad Minister Road" in Google's **Place ID Finder** (developers.google.com/maps/documentation/places/web-service/place-id). Starts with `ChIJ…` |
-| `GOOGLE_MAPS_API_KEY` | Live Google rating + reviews (refreshed daily) | Google Cloud Console → enable **Places API (New)** → create an API key → restrict it to Places API |
-| `RESEND_API_KEY`, `LEAD_TO_EMAIL`, `LEAD_FROM_EMAIL` | Emailing each booking to the owner | resend.com → API key; verify the sending domain for `LEAD_FROM_EMAIL` |
-| `LEAD_SHEET_WEBHOOK` | Logging each booking in a Google Sheet | See "Leads sheet" below |
+### Optional environment variables (Pages → Settings → Variables and Secrets)
 
-**Without these keys the site still works:** reviews fall back to the real reviews saved in `lib/reviews.ts`, and bookings are accepted and written to the server log. Add at least one lead channel (email or sheet) **before launch** so no booking is missed.
+| Variable | Effect |
+|---|---|
+| `NEXT_PUBLIC_SITE_URL` | Canonical URLs, sitemap and share previews use the real domain |
+| `GOOGLE_MAPS_API_KEY` + `GOOGLE_PLACE_ID` | Rating and reviews are fetched live from Google **at build time**. Without them, the 4 real saved reviews in `lib/reviews.ts` are shown |
 
-### Leads sheet (Google Apps Script)
+To keep live reviews fresh, create a **Deploy Hook** (Pages → Settings → Builds) and call it once a day, for example from a free cron service.
 
-1. Create a Google Sheet with the headers: `When | Name | Phone | Services | Car | Message | Page | Source`.
-2. Extensions → Apps Script, paste:
+## Phase 2 (optional): also record every lead in a Google Sheet
 
-```js
-function doPost(e) {
-  const d = JSON.parse(e.postData.contents);
-  SpreadsheetApp.getActiveSheet().appendRow([d.when, d.name, d.phone, d.services, d.car, d.message, d.page, d.source]);
-  return ContentService.createTextOutput(JSON.stringify({ ok: true })).setMimeType(ContentService.MimeType.JSON);
-}
-```
+Keeps WhatsApp **and** logs each enquiry, so no lead is lost even if the customer never presses Send.
 
-3. Deploy → New deployment → Web app → Execute as **Me**, access **Anyone** → copy the URL into `LEAD_SHEET_WEBHOOK`.
+1. **Sheet:** new Google Sheet with the headers `Time | Name | Phone | Car | Services | Page`.
+2. **Apps Script** (Extensions → Apps Script):
 
-## Deploy (Vercel)
+   ```js
+   function doPost(e) {
+     const d = JSON.parse(e.postData.contents);
+     if (d.secret !== 'CHANGE-ME-TO-A-LONG-RANDOM-WORD') return ContentService.createTextOutput('no');
+     SpreadsheetApp.getActiveSheet().appendRow([new Date(), d.name, "'" + d.phone, d.car, d.services, d.page]);
+     return ContentService.createTextOutput('ok');
+   }
+   ```
 
-1. Push this folder to a GitHub repo, then import it in Vercel with the **root directory set to `web`**.
-2. Add the environment variables above, then deploy.
-3. Point the domain at Vercel.
-4. In the **Google Business Profile**, set the website to `https://<domain>/?utm_source=google&utm_medium=gbp`, and add the link to the Instagram and YouTube bios.
+   Deploy → New deployment → **Web app**, execute as **Me**, access **Anyone**. Copy the `/exec` URL.
+3. **Cloudflare secrets** (Pages → Settings → Variables and Secrets): `LEAD_SHEET_WEBHOOK` = the `/exec` URL, `LEAD_SECRET` = the same random word.
+4. **Pages Function:** add `web/functions/api/lead.js`. Cloudflare runs files in `functions/` as server code automatically, even on a static site.
+
+   ```js
+   export async function onRequestPost({ request, env }) {
+     const b = await request.json().catch(() => ({}));
+     const ok = typeof b.name === 'string' && b.name.trim().length >= 2 && /^[6-9]\d{9}$/.test(b.phone || '') && !b.company;
+     if (!ok) return new Response('bad request', { status: 400 });
+     await fetch(env.LEAD_SHEET_WEBHOOK, {
+       method: 'POST',
+       body: JSON.stringify({ secret: env.LEAD_SECRET, name: b.name.trim(), phone: '+91' + b.phone, car: b.car || '', services: (b.services || []).join(', '), page: b.page || '' }),
+     });
+     return new Response('ok');
+   }
+   ```
+
+5. **Form:** in `ConsultForm.tsx` `onSubmit`, just before `window.open(...)`, add one line. `sendBeacon` delivers the data in the background, so WhatsApp still opens instantly:
+
+   ```ts
+   navigator.sendBeacon('/api/lead', new Blob([JSON.stringify({ name, phone: d, car, services, page: location.pathname })], { type: 'application/json' }));
+   ```
+
+6. Push. Test once: a new row should appear in the sheet, and WhatsApp should still open.
 
 ## Editing content
 
 - **Phone, address, hours, services, builds, FAQs:** `lib/site.ts`
-- **Fallback Google reviews:** `lib/reviews.ts` (copy new reviews unedited from Google; each `id` is the review id from Maps, which makes the card open that exact review)
-- **Photos:** drop new files in `../assets/photos`, then run `npm run images` (it applies the same colour grade to every photo and rebuilds the share image)
-
-## Quality bar (measured with Lighthouse 12 on the production build)
-
-| | Performance | Accessibility | Best practices | SEO |
-|---|---|---|---|---|
-| Desktop | 100 | 100 | 100 | 100 |
-| Mobile (throttled slow 4G) | 91 | 100 | 100 | 100 |
+- **Saved Google reviews:** `lib/reviews.ts` (copy new reviews unedited from Google; each `id` is the Maps review id, which makes the card open that exact review)
+- **Photos:** put new files in `../assets/photos`, then run `npm run images`. It applies the same colour grade and writes 480/708 px (store) and 480/828/1280 px (builds) WebP versions; `lib/image-loader.ts` picks the right size per screen.
 
 ## Credits
 

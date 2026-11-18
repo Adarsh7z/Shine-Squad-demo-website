@@ -38,15 +38,20 @@ await mkdir(path.join(out, 'builds'), { recursive: true });
 
 for (const [file, name] of store) {
   const input = path.join(src, 'photos', file);
-  await grade(sharp(input)).webp({ quality: 88 }).toFile(path.join(out, 'store', `${name}.webp`));
+  // Two widths; lib/image-loader.ts picks the smallest that fits each screen.
+  for (const w of [480, 708]) {
+    await grade(sharp(input)).resize({ width: w, withoutEnlargement: true }).webp({ quality: 72, effort: 6 }).toFile(path.join(out, 'store', `${name}-${w}.webp`));
+  }
   console.log('store', name);
 }
 
 const yt = path.join(src, 'youtube');
 for (const f of await readdir(yt)) {
-  if (!f.endsWith('.jpg')) continue;
+  if (!f.endsWith('.jpg') || f.startsWith('short-')) continue; // Shorts thumbnails aren't used on the site
   const name = f.replace('.jpg', '');
-  await sharp(path.join(yt, f)).resize({ width: 1280, withoutEnlargement: true }).webp({ quality: 82 }).toFile(path.join(out, 'builds', `${name}.webp`));
+  for (const w of [480, 828, 1280]) {
+    await sharp(path.join(yt, f)).resize({ width: w, withoutEnlargement: true }).webp({ quality: 74, effort: 6 }).toFile(path.join(out, 'builds', `${name}-${w}.webp`));
+  }
   console.log('build', name);
 }
 

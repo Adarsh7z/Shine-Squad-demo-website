@@ -14,7 +14,7 @@ export default function NotFound() {
             Back to home <ArrowRight className="arrow" aria-hidden="true" />
           </Link>
           <Link className="btn btn--xl" href="/#book">
-            Book a consultation
+            Consult now
           </Link>
         </div>
       </div>

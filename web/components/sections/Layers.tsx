@@ -246,7 +246,7 @@ export default function Layers() {
             Many owners combine them: PPF on the front for chips, a coating everywhere for gloss. We&rsquo;ll show you each one on a real panel before you decide.
           </p>
           <Link href="/#book" className="btn btn--primary">
-            Not sure? Book a free consultation <ArrowRight className="arrow" aria-hidden="true" />
+            Not sure? Get free advice <ArrowRight className="arrow" aria-hidden="true" />
           </Link>
         </div>
       </div>

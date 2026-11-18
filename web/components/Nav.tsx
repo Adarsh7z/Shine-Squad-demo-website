@@ -122,7 +122,7 @@ export default function Nav() {
               <Phone aria-hidden="true" />
             </a>
             <Link href="/#book" className="btn btn--primary nav__book">
-              Book a consultation <ArrowRight className="arrow" aria-hidden="true" />
+              Consult now <ArrowRight className="arrow" aria-hidden="true" />
             </Link>
             <button ref={burger} className="icon-btn nav__burger" aria-label="Open menu" aria-expanded={sheet} onClick={() => setSheet(true)}>
               <Menu aria-hidden="true" />
@@ -168,7 +168,7 @@ export default function Nav() {
                     </p>
                   </div>
                   <Link href="/#book" className="btn btn--primary" onClick={() => setMega(false)}>
-                    Book a consultation <ArrowRight className="arrow" aria-hidden="true" />
+                    Consult now <ArrowRight className="arrow" aria-hidden="true" />
                   </Link>
                 </div>
               </div>

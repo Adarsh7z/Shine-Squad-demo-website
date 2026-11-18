@@ -43,7 +43,7 @@ export default function FloatingActions() {
         </a>
         <a href="/#book" className="is-primary">
           <CalendarCheck aria-hidden="true" />
-          Book
+          Consult
         </a>
         <a href={links.directions} target="_blank" rel="noopener noreferrer" data-track="click_directions">
           <MapPin aria-hidden="true" />
