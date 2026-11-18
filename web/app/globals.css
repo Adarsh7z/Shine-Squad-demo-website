@@ -1366,10 +1366,12 @@ html.js .reveal.is-in { opacity: 1; transform: none; }
 
 @media (max-width: 1023px) {
   .hero__photo { max-width: none; margin-left: 0; aspect-ratio: 4 / 3; }
-  .hero__photo img { object-position: 50% 38%; }
+  /* Crop out the upper floor (balcony, AC unit, cloth): frame starts at the signboard */
+  .hero__photo img { object-position: 50% 60%; }
 }
 @media (max-width: 639px) {
-  .hero__photo { aspect-ratio: 4 / 5; }
+  .hero__photo { aspect-ratio: 1.08 / 1; }
+  .hero__photo img { object-position: 50% 100%; }
 }
 
 /* ===== Mobile-first refinements (most visitors are on phones) ===== */
