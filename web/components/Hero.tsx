@@ -60,9 +60,6 @@ export default function Hero({ rating, count }: { rating: number; count: number 
                 sizes="(min-width: 1024px) 560px, 100vw"
               />
               <span className="sweep" aria-hidden="true" />
-              <span className="pill hero__tag">
-                <span className="dot dot--ok" aria-hidden="true" /> The studio, Minister Road
-              </span>
             </div>
           </div>
         </div>

@@ -35,6 +35,14 @@ const LAYERS = [
   { h: [64, 92], top: 'rgba(235,240,250,0.07)', side: 'rgba(255,255,255,0.10)', side2: 'rgba(255,255,255,0.06)', label: 'PPF' },
 ] as const;
 
+const METRICS = ['Gloss', 'Water beading', 'Chip & scratch protection', 'How long it lasts'];
+const COMPARE = [
+  { name: 'Teflon', what: 'Polymer polish-and-seal', best: 'A quick gloss refresh', scores: [2, 2, 1, 1], hl: false },
+  { name: 'Ceramic', what: 'Hard, glass-like SiO₂ layer', best: 'Gloss and easy washing', scores: [4, 4, 2, 3], hl: false },
+  { name: 'Graphene', what: 'Ceramic with graphene: slicker, fewer water spots', best: 'Maximum gloss and water behaviour', scores: [5, 5, 2, 4], hl: true },
+  { name: 'PPF', what: 'Clear or matte urethane film', best: 'Stone-chip and scratch defence', scores: [4, 2, 5, 5], hl: false },
+];
+
 export default function Layers() {
   const [active, setActive] = useState(0);
   const refs = useRef<(HTMLDivElement | null)[]>([]);
@@ -204,6 +212,35 @@ export default function Layers() {
             </tbody>
           </table>
         </div>
+
+        {/* Phones: one swipeable card per option instead of a cramped table */}
+        <div className="compare-cards" role="list" aria-label="Comparison of Teflon, ceramic, graphene and PPF">
+          {COMPARE.map((c) => (
+            <div className={`compare-card${c.hl ? ' compare-card--hl' : ''}`} role="listitem" key={c.name}>
+              <h3 className="h3">{c.name}</h3>
+              <p className="body">{c.what}</p>
+              <p className="compare-card__best">
+                <span className="mono">Best for</span> {c.best}
+              </p>
+              <dl>
+                {METRICS.map((m, i) => (
+                  <div key={m}>
+                    <dt>{m}</dt>
+                    <dd>
+                      <span className="meter" role="img" aria-label={`${c.scores[i]} out of 5`}>
+                        {Array.from({ length: 5 }).map((_, k) => (
+                          <i key={k} className={k < c.scores[i] ? 'on' : ''} />
+                        ))}
+                      </span>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ))}
+        </div>
+        <p className="compare-hint mono">Swipe to compare →</p>
+
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 20, marginTop: 28 }}>
           <p className="body" style={{ maxWidth: '60ch' }}>
             Many owners combine them: PPF on the front for chips, a coating everywhere for gloss. We&rsquo;ll show you each one on a real panel before you decide.

@@ -21,11 +21,10 @@ export default function Services() {
           </p>
         </div>
         <div className="svc-grid">
-          {order.map((g, idx) => (
+          {order.map((g) => (
             <article className="card gloss svc-card" key={g}>
               <div className="svc-card__media zoom">
                 <Image src={groups[g].image} alt={groups[g].alt} fill sizes="(min-width: 1024px) 420px, 100vw" style={{ objectPosition: g === 'protection' ? '50% 30%' : '50% 40%' }} />
-                <span className="pill svc-card__num">0{idx + 1} · {groups[g].title}</span>
               </div>
               <div className="svc-card__body">
                 <h3 className="h3">{groups[g].title}</h3>

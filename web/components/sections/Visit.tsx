@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { Accessibility, Copy, MapPin, Navigation, Phone } from 'lucide-react';
+import { Accessibility, Copy, Navigation, Phone } from 'lucide-react';
 import { business, dayNames, fullAddress, hours, links, whatsappLink } from '@/lib/site';
 import { fmt12 } from '@/lib/hours';
 import OpenStatus, { useOpenStatus } from '../OpenStatus';
@@ -36,46 +36,16 @@ function CopyAddress() {
   );
 }
 
-function MapFacade() {
-  const [live, setLive] = useState(false);
+function MapEmbed() {
   return (
     <div className="map">
-      {live ? (
-        <iframe src={links.mapEmbed} title="Shine Squad on Google Maps" referrerPolicy="no-referrer-when-downgrade" allowFullScreen />
-      ) : (
-        <div className="map__facade">
-          <svg className="map__roads" viewBox="0 0 1200 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <g fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth="14" strokeLinecap="round">
-              <path d="M-20 150 C 300 120, 520 210, 1220 170" />
-              <path d="M420 -20 L 660 500" />
-            </g>
-            <g fill="none" stroke="rgba(255,194,26,0.22)" strokeWidth="18" strokeLinecap="round">
-              <path d="M200 520 L 560 250 L 1220 -20" />
-            </g>
-            <g fill="rgba(255,255,255,0.35)" style={{ font: '500 13px var(--font-mono)', letterSpacing: '0.12em' }}>
-              <text x="780" y="120" transform="rotate(-24 780 120)">MINISTER ROAD</text>
-              <text x="40" y="132">P.G. ROAD</text>
-            </g>
-            <g>
-              <rect x="700" y="300" width="150" height="70" rx="8" fill="rgba(255,107,94,0.10)" stroke="rgba(255,107,94,0.35)" />
-              <text x="775" y="341" textAnchor="middle" fill="rgba(255,255,255,0.55)" style={{ font: '500 12px var(--font-mono)', letterSpacing: '0.1em' }}>KIMS HOSPITAL</text>
-            </g>
-          </svg>
-          <div className="map__center">
-            <span className="map__pin" aria-hidden="true">
-              <span>SS</span>
-            </span>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
-              <button type="button" className="btn" onClick={() => setLive(true)}>
-                <MapPin aria-hidden="true" /> Load interactive map
-              </button>
-              <a className="btn btn--primary" href={links.directions} target="_blank" rel="noopener noreferrer" data-track="click_directions">
-                <Navigation aria-hidden="true" /> Get directions
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
+      <iframe
+        src={links.mapEmbed}
+        title="Shine Squad on Google Maps, Minister Road, Secunderabad"
+        loading="lazy"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+      />
     </div>
   );
 }
@@ -90,7 +60,6 @@ export default function Visit() {
         <div className="visit-grid">
           <div className="frame visit-photo zoom">
             <Image src="/images/store/storefront-street.webp" alt="Shine Squad shopfront on Minister Road with the black-and-yellow signboard" fill sizes="(min-width: 1024px) 520px, 100vw" style={{ objectPosition: '50% 45%' }} />
-            <span className="pill">Look for the yellow sign</span>
           </div>
           <div className="info">
             <div>
@@ -161,7 +130,7 @@ export default function Visit() {
             </div>
           </div>
         </div>
-        <MapFacade />
+        <MapEmbed />
       </div>
     </section>
   );

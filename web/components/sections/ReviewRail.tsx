@@ -92,7 +92,8 @@ export default function ReviewRail({ reviews, count, allUrl }: { reviews: Review
     <div>
       <div className="rail-head">
         <p className="mono" style={{ color: 'var(--smoke)', margin: 0 }}>
-          Swipe or use the arrows · tap a review to open it on Google
+          <span className="hint-long">Swipe or use the arrows · tap a review to open it on Google</span>
+          <span className="hint-short">Swipe for more →</span>
         </p>
         <div className="rail-head__btns">
           <button type="button" className="icon-btn" data-dir="prev" aria-label="Previous reviews" aria-disabled={atStart} onClick={() => scrollByCard(-1)}>

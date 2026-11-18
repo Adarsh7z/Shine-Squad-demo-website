@@ -43,7 +43,9 @@ export const links = {
     ? `https://search.google.com/local/writereview?placeid=${placeId}`
     : 'https://maps.google.com/?cid=12549756595992715525',
   directions: `https://www.google.com/maps/dir/?api=1&destination=${17.4383964},${78.4811216}${placeId ? `&destination_place_id=${placeId}` : ''}`,
-  mapEmbed: 'https://maps.google.com/maps?q=Shine+Squad,+Minister+Rd,+Secunderabad&ll=17.4383964,78.4811216&z=17&output=embed',
+  // Owner-supplied Google Maps embed (place: Shine Squad, Minister Road)
+  mapEmbed:
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4272.338152825811!2d78.4811216!3d17.4383964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9b72ff569bc9%3A0xae29b121f1c2e105!2sShine%20Squad!5e1!3m2!1sen!2sin!4v1795010350540!5m2!1sen!2sin',
 };
 
 export function whatsappLink(text?: string) {

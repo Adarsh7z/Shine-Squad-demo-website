@@ -181,9 +181,6 @@ export default function BeadingCanvas() {
   return (
     <div className="beading">
       <canvas ref={ref} aria-label="Water beading on a ceramic-coated panel. Move your pointer to blow the droplets." role="img" />
-      <span className="pill">
-        <span className="dot dot--ok" aria-hidden="true" /> Coated panel · move to blow
-      </span>
     </div>
   );
 }
