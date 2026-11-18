@@ -1,0 +1,21 @@
+# dependencies & builds
+node_modules/
+.next/
+out/
+.vercel/
+.wrangler/
+*.tsbuildinfo
+next-env.d.ts
+
+# secrets
+.env
+.env*.local
+.env.production
+
+# local tooling
+.claude/
+.DS_Store
+Thumbs.db
+
+# design reference only (screenshot of a different company's site), never ship
+assets/photos/00-reference-testimonials-widget.png
