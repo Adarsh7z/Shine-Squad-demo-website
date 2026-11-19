@@ -19,3 +19,8 @@ Thumbs.db
 
 # design reference only (screenshot of a different company's site), never ship
 assets/photos/00-reference-testimonials-widget.png
+
+# tasteskill working files (keep the plan and the waivers)
+web/.taste-skill/*
+!web/.taste-skill/plan.md
+!web/.taste-skill/waivers.json

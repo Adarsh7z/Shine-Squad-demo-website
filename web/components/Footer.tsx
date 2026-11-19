@@ -1,74 +1,70 @@
 import Link from 'next/link';
-import { Phone, MapPin } from 'lucide-react';
-import { business, fullAddress, groups, links, services, whatsappLink, type ServiceGroup } from '@/lib/site';
-import { WhatsApp, YouTube } from './Icons';
+import { business, links, offerGroups, serviceLabels, whatsappLink } from '@/lib/site';
 import Wordmark from './Wordmark';
 
+/** footer.closing, one screen: the columns and legal row, then the name set wide (the dealt type moment). */
 export default function Footer() {
-  const order: ServiceGroup[] = ['protection', 'upgrades', 'restoration'];
+  const year = new Date().getFullYear();
+  const picks = [...offerGroups[0].slugs.slice(0, 3), ...offerGroups[1].slugs.slice(0, 3)];
   return (
-    <footer className="footer">
-      <div className="wrap">
-        <div className="footer__grid">
-          <div className="footer__brand">
-            <Wordmark />
-            <p>
-              {business.tagline} Car protection, detailing and accessories on Minister Road, Secunderabad. A unit of {business.parent}, {business.parentLine.toLowerCase()} since {business.parentSince}.
-            </p>
-            <span className="footer__telugu" lang="te">{business.telugu}</span>
-            <div className="footer__social">
-              <a className="icon-btn" href={business.youtube} target="_blank" rel="noopener noreferrer" aria-label="Car Jewel on YouTube">
-                <YouTube />
-              </a>
-              <a className="icon-btn" href={whatsappLink()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Shine Squad" data-track="click_whatsapp">
-                <WhatsApp />
-              </a>
-              <a className="icon-btn" href={links.maps} target="_blank" rel="noopener noreferrer" aria-label="Shine Squad on Google Maps">
-                <MapPin aria-hidden="true" />
-              </a>
+    <footer className="closing" id="contact">
+      <div className="wrap closing__wrap">
+        <div>
+          <div className="closing__cols">
+            <div className="closing__brand">
+              <Wordmark ink />
+              <p>
+                A unit of {business.parent}, {business.parentLine.toLowerCase()}, since {business.parentSince}.
+              </p>
+            </div>
+            <div>
+              <p className="t-label closing__head">Visit</p>
+              <div className="closing__list">
+                <a href={links.maps} target="_blank" rel="noopener noreferrer" data-track="click_map">
+                  Minister Road, next to KIMS
+                </a>
+                <span>Monday to Saturday, 10 am – 10 pm</span>
+                <span>Sunday closed</span>
+              </div>
+            </div>
+            <div>
+              <p className="t-label closing__head">Contact</p>
+              <div className="closing__list">
+                <a className="tnum" href={links.tel} data-track="click_call">
+                  {business.phoneDisplay}
+                </a>
+                <a href={whatsappLink('Hi Shine Squad, I would like to book a free consultation.')} target="_blank" rel="noopener noreferrer" data-track="click_whatsapp">
+                  WhatsApp
+                </a>
+                <a href={business.youtube} target="_blank" rel="noopener noreferrer" data-track="click_youtube">
+                  YouTube
+                </a>
+              </div>
+            </div>
+            <div>
+              <p className="t-label closing__head">Services</p>
+              <div className="closing__list">
+                {picks.map((slug) => (
+                  <Link key={slug} href={`/services/${slug}`}>
+                    {serviceLabels[slug]}
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
-          {order.map((g) => (
-            <div key={g}>
-              <h2>{groups[g].title}</h2>
-              <ul>
-                {services
-                  .filter((s) => s.group === g)
-                  .map((s) => (
-                    <li key={s.slug}>
-                      <Link className="link link--bare" href={`/services/${s.slug}`}>
-                        {s.name}
-                      </Link>
-                    </li>
-                  ))}
-                {g === 'restoration' && (
-                  <>
-                    <li style={{ marginTop: 18 }}>
-                      <a className="link link--bare" href={links.tel} data-track="click_call">
-                        <Phone size={14} aria-hidden="true" /> {business.phoneDisplay}
-                      </a>
-                    </li>
-                    <li>
-                      <a className="link link--bare" href={links.directions} target="_blank" rel="noopener noreferrer" data-track="click_directions">
-                        <MapPin size={14} aria-hidden="true" /> Get directions
-                      </a>
-                    </li>
-                  </>
-                )}
-              </ul>
-            </div>
-          ))}
+          <div className="closing__legal">
+            <span>
+              © {year} {business.name}
+            </span>
+            <nav aria-label="Legal">
+              <Link href="/privacy">Privacy</Link>
+              <Link href="/contact">Contact</Link>
+            </nav>
+          </div>
         </div>
-        <div className="footer__bottom">
-          <span>
-            © {new Date().getFullYear()} Shine Squad · {fullAddress}
-          </span>
-          <span style={{ display: 'flex', gap: 20 }}>
-            <Link className="link link--bare" href="/contact">Contact</Link>
-            <Link className="link link--bare" href="/privacy">Privacy</Link>
-            <span>Made in Hyderabad</span>
-          </span>
-        </div>
+        <p className="closing__name" aria-hidden="true">
+          Shine Squad
+        </p>
       </div>
     </footer>
   );

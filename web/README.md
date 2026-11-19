@@ -19,9 +19,19 @@ npm run build
 npx serve out        # optional: preview the exact files Cloudflare will host
 ```
 
-## How "Consult now" works (no backend)
+## Design
 
-The consultation form checks the name and the 10-digit Indian mobile number, then opens **WhatsApp** to Shine Squad's number (+91 70131 46997) with this message ready to send:
+Built to the tasteskill rules for a shop people visit (a "place" page), with Emil Kowalski's motion rules:
+
+- Colours from the shopfront itself: cream walls (`#f5f1e8`), the black fascia (the nav bar) and the signboard yellow. Type: Albert Sans; the logo keeps its signboard wordmark.
+- Home page, one section per screen: hero, visit (address, hours, the Google map), services, three builds told as scroll photo chapters, Google reviews, the booking form.
+- Square photographs with nothing written on them, one button style, hover effects only on devices with a mouse, nothing fading in on scroll.
+- The photo-chapters moment is tasteskill's own script (`public/assets/moments`, MIT), mounted after hydration by `components/MomentMount.tsx`; with reduced motion it shows the three photographs side by side.
+- The plan and the five deliberate exceptions (real address, phone, the owner's map embed, the yellow nav button, review deep links) are in `.taste-skill/`.
+
+## How "Book a free consultation" works (no backend)
+
+The booking form checks the name and the 10-digit Indian mobile number, then opens **WhatsApp** to Shine Squad's number (+91 70131 46997) with this message ready to send:
 
 ```
 Hi Shine Squad! 👋

@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Albert_Sans } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
-import TopBar from '@/components/TopBar';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import FloatingActions from '@/components/FloatingActions';
@@ -19,8 +18,8 @@ const archivo = localFont({
   declarations: [{ prop: 'font-stretch', value: '125%' }],
   fallback: ['Arial Black', 'Arial', 'sans-serif'],
 });
-const geist = Geist({ subsets: ['latin'], variable: '--f-geist', display: 'optional' });
-const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--f-geist-mono', display: 'swap', preload: false });
+// Albert Sans (the dealt pairing for a shop): text 400, buttons and labels 500.
+const albert = Albert_Sans({ subsets: ['latin'], weight: ['400', '500'], variable: '--f-albert', display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -29,7 +28,7 @@ export const metadata: Metadata = {
     template: '%s | Shine Squad',
   },
   description:
-    'Ceramic, graphene & PPF protection, wraps, tints, audio, lighting and seat covers on Minister Road, Secunderabad, next to KIMS. Rated 4.8 on Google. Free consultation on WhatsApp.',
+    'Ceramic and graphene coating, PPF, wraps, tints, audio, lighting and seat covers on Minister Road, Secunderabad, next to KIMS. Rated 4.8 on Google. Book a free consultation on WhatsApp.',
   applicationName: 'Shine Squad',
   keywords: ['ceramic coating Secunderabad', 'PPF Hyderabad', 'car accessories Minister Road', 'car seat covers Secunderabad', 'graphene coating Hyderabad', 'car window tinting Secunderabad', 'car audio Secunderabad'],
   alternates: { canonical: '/' },
@@ -38,14 +37,14 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     siteName: 'Shine Squad',
     title: 'Shine Squad · Ceramic, PPF & car accessories in Secunderabad',
-    description: 'Protection, upgrades and restoration for cars that are loved. Minister Road, next to KIMS Hospital.',
+    description: 'Car protection, detailing and accessories on Minister Road, next to KIMS Hospital. Open Monday to Saturday, 10 am to 10 pm.',
   },
   twitter: { card: 'summary_large_image' },
   formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0a0a0b',
+  themeColor: '#0d0d0d',
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
@@ -66,10 +65,8 @@ const jsonLd = {
     streetAddress: `${business.address.line1}, ${business.address.line2}`,
     addressLocality: business.address.city,
     addressRegion: business.address.region,
-    postalCode: business.address.postal,
     addressCountry: business.address.country,
   },
-  geo: { '@type': 'GeoCoordinates', latitude: business.geo.lat, longitude: business.geo.lng },
   hasMap: links.maps,
   openingHoursSpecification: [
     {
@@ -89,22 +86,21 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" suppressHydrationWarning className={`${archivo.variable} ${geist.variable} ${geistMono.variable}`}>
+    <html lang="en-IN" suppressHydrationWarning data-type="place" data-radius="soft" data-buttons="arrow" className={`${archivo.variable} ${albert.variable}`}>
       <head>
         {/* Mark JS early so entrance states apply before first paint; fall back to visible after 1.2s. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "document.documentElement.classList.add('js');(function(){function go(){var h=document.querySelector('.hero[data-enter]');if(h)requestAnimationFrame(function(){requestAnimationFrame(function(){h.classList.add('is-entered')})})}if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go)})();",
+              "document.documentElement.classList.add('js','m-enter');(function(){function go(){var h=document.querySelector('.hero[data-enter]');if(h)requestAnimationFrame(function(){requestAnimationFrame(function(){h.classList.add('is-entered')})})}if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go)})();",
           }}
         />
+        <meta name="page-type" content="place" />
+        <meta name="site-kind" content="other" />
+        <meta name="page-kind" content="place" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body>
-        <a href="#main" className="skip-link">
-          Skip to content
-        </a>
-        <TopBar />
         <Nav />
         <main id="main">{children}</main>
         <Footer />

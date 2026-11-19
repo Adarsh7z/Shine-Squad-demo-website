@@ -35,14 +35,14 @@ export const placeId = process.env.GOOGLE_PLACE_ID || '';
 
 export const links = {
   tel: `tel:${business.phoneE164}`,
-  maps: 'https://maps.google.com/?cid=12549756595992715525',
+  maps: 'https://www.google.com/maps/search/?api=1&query=Shine+Squad%2C+Minister+Road%2C+Secunderabad',
   reviews: placeId
     ? `https://search.google.com/local/reviews?placeid=${placeId}`
-    : 'https://maps.google.com/?cid=12549756595992715525',
+    : 'https://www.google.com/maps/search/?api=1&query=Shine+Squad%2C+Minister+Road%2C+Secunderabad',
   writeReview: placeId
     ? `https://search.google.com/local/writereview?placeid=${placeId}`
-    : 'https://maps.google.com/?cid=12549756595992715525',
-  directions: `https://www.google.com/maps/dir/?api=1&destination=${17.4383964},${78.4811216}${placeId ? `&destination_place_id=${placeId}` : ''}`,
+    : 'https://www.google.com/maps/search/?api=1&query=Shine+Squad%2C+Minister+Road%2C+Secunderabad',
+  directions: `https://www.google.com/maps/dir/?api=1&destination=Shine+Squad%2C+Minister+Road%2C+Secunderabad${placeId ? `&destination_place_id=${placeId}` : ''}`,
   // Owner-supplied Google Maps embed (place: Shine Squad, Minister Road)
   mapEmbed:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4272.338152825811!2d78.4811216!3d17.4383964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9b72ff569bc9%3A0xae29b121f1c2e105!2sShine%20Squad!5e1!3m2!1sen!2sin!4v1795010350540!5m2!1sen!2sin',
@@ -290,6 +290,31 @@ export const services: Service[] = [
 ];
 
 export const getService = (slug: string) => services.find((s) => s.slug === slug);
+
+/** Short names for ruled lists, where each must fit one line. */
+export const serviceLabels: Record<string, string> = {
+  'ceramic-coating': 'Ceramic & graphene coating',
+  'paint-protection-film': 'Paint protection film',
+  'teflon-coating': 'Teflon coating',
+  'car-wrapping': 'Car wrapping',
+  'window-tinting': 'Window tinting',
+  'detail-spa-restoration': 'Detail spa',
+  'audio-video': 'Audio & screens',
+  'seat-covers-mats': 'Seat covers & mats',
+  'lighting-upgrades': 'LED lighting',
+  'alloy-wheels': 'Alloy wheels',
+  'electrical-headlight-repair': 'Electrical & headlights',
+  maintenance: 'Routine maintenance',
+};
+
+/** The two groups on the home page, six names each. */
+export const offerGroups = [
+  { label: 'Protection and detailing services', slugs: ['ceramic-coating', 'paint-protection-film', 'teflon-coating', 'car-wrapping', 'window-tinting', 'detail-spa-restoration'] },
+  { label: 'Upgrade and repair services', slugs: ['audio-video', 'seat-covers-mats', 'lighting-upgrades', 'alloy-wheels', 'electrical-headlight-repair', 'maintenance'] },
+];
+
+/** The main action, word for word in the nav, the hero, the booking and the phone bar. */
+export const MAIN_ACTION = 'Book a free consultation';
 
 // Real builds from the Car Jewel YouTube channel.
 export const builds = [

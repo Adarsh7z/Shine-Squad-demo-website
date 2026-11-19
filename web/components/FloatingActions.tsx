@@ -1,67 +1,47 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { CalendarCheck, MapPin, Phone } from 'lucide-react';
-import { links, whatsappLink } from '@/lib/site';
-import { WhatsApp } from './Icons';
+import { usePathname } from 'next/navigation';
+import { ArrowRight, Phone } from 'lucide-react';
+import { MAIN_ACTION, business, links } from '@/lib/site';
 
-/** Mobile bottom action bar + desktop WhatsApp pill. */
+/**
+ * The phone bar: the main action full width, with a call button.
+ * It waits until the hero's button has scrolled away and steps aside while the booking form is on screen.
+ */
 export default function FloatingActions() {
-  const [formInView, setFormInView] = useState(false);
-  const [pastHero, setPastHero] = useState(false);
+  const pathname = usePathname();
+  const [heroVisible, setHeroVisible] = useState(true);
+  const [formVisible, setFormVisible] = useState(false);
 
   useEffect(() => {
+    const heroBtn = document.querySelector('.hero .btn, .page-head .btn--primary');
     const form = document.getElementById('book');
-    const hero = document.querySelector('[data-hero]');
+    setHeroVisible(!!heroBtn);
+    setFormVisible(false);
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
-          if (e.target === form) setFormInView(e.isIntersecting);
-          if (e.target === hero) setPastHero(!e.isIntersecting);
+          if (e.target === heroBtn) setHeroVisible(e.isIntersecting);
+          if (e.target === form) setFormVisible(e.isIntersecting);
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0 }
     );
+    if (heroBtn) io.observe(heroBtn);
     if (form) io.observe(form);
-    if (hero) io.observe(hero);
-    else setPastHero(true);
     return () => io.disconnect();
-  }, []);
+  }, [pathname]);
 
-  const wa = whatsappLink('Hi Shine Squad, I would like to book a free consultation.');
-
+  const show = !heroVisible && !formVisible;
   return (
-    <>
-      <nav className="actionbar" aria-label="Quick actions" data-hidden={formInView}>
-        <a href={links.tel} data-track="click_call">
-          <Phone aria-hidden="true" />
-          Call
-        </a>
-        <a href={wa} target="_blank" rel="noopener noreferrer" data-track="click_whatsapp">
-          <WhatsApp style={{ color: '#25D366' }} />
-          WhatsApp
-        </a>
-        <a href="/#book" className="is-primary">
-          <CalendarCheck aria-hidden="true" />
-          Consult
-        </a>
-        <a href={links.directions} target="_blank" rel="noopener noreferrer" data-track="click_directions">
-          <MapPin aria-hidden="true" />
-          Directions
-        </a>
-      </nav>
-      <a
-        href={wa}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="wa-pill"
-        data-visible={pastHero}
-        aria-label="Chat on WhatsApp"
-        data-track="click_whatsapp"
-      >
-        <WhatsApp />
-        <span>Chat on WhatsApp</span>
+    <nav className="actionbar" aria-label="Quick actions" data-show={show} aria-hidden={!show} inert={!show ? true : undefined}>
+      <a href={links.tel} className="icon-btn" aria-label={`Call ${business.phoneDisplay}`} data-track="click_call">
+        <Phone aria-hidden="true" />
       </a>
-    </>
+      <a href="/#book" className="btn btn--primary">
+        {MAIN_ACTION} <ArrowRight className="arrow" aria-hidden="true" />
+      </a>
+    </nav>
   );
 }

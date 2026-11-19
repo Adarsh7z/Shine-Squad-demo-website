@@ -45,6 +45,20 @@ for (const [file, name] of store) {
   console.log('store', name);
 }
 
+// The phone hero: the shopfront from the signboard down (the upper floor's balcony, AC unit and cloth cut off).
+{
+  const input = path.join(src, 'photos', '01-storefront-xuv700-signboard.webp');
+  const m = await sharp(input).metadata();
+  const top = Math.round(m.height * 0.225);
+  for (const w of [480, 708]) {
+    await grade(sharp(input).extract({ left: 0, top, width: m.width, height: m.height - top }))
+      .resize({ width: w, withoutEnlargement: true })
+      .webp({ quality: 72, effort: 6 })
+      .toFile(path.join(out, 'store', `storefront-sign-${w}.webp`));
+  }
+  console.log('store', 'storefront-sign');
+}
+
 const yt = path.join(src, 'youtube');
 for (const f of await readdir(yt)) {
   if (!f.endsWith('.jpg') || f.startsWith('short-')) continue; // Shorts thumbnails aren't used on the site
@@ -53,6 +67,22 @@ for (const f of await readdir(yt)) {
     await sharp(path.join(yt, f)).resize({ width: w, withoutEnlargement: true }).webp({ quality: 74, effort: 6 }).toFile(path.join(out, 'builds', `${name}-${w}.webp`));
   }
   console.log('build', name);
+}
+
+// Crops of build stills with the video's own text cut away (no words on photographs).
+// [source id, output name, x0, y0, x1, y1] as shares of the frame.
+const crops = [
+  ['vb7L3t6O2AY', 'storefront-wide', 0, 0.125, 1, 0.89], // the signboard and open shop floor, overlays cut off
+  ['wUas6KK3rPU', 'i20-studio', 0, 0, 1, 0.7], // red i20 in the hexagon-light bay, caption cut off
+];
+for (const [id, name, x0, y0, x1, y1] of crops) {
+  const file = path.join(yt, `${id}.jpg`);
+  const m = await sharp(file).metadata();
+  const box = { left: Math.round(m.width * x0), top: Math.round(m.height * y0), width: Math.round(m.width * (x1 - x0)), height: Math.round(m.height * (y1 - y0)) };
+  for (const w of [480, 828, 1280]) {
+    await sharp(file).extract(box).resize({ width: w, withoutEnlargement: true }).webp({ quality: 74, effort: 6 }).toFile(path.join(out, 'builds', `${name}-${w}.webp`));
+  }
+  console.log('crop', name);
 }
 
 // Open Graph image: storefront photo on the right, wordmark on black.

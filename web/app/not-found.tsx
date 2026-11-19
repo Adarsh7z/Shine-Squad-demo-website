@@ -1,20 +1,22 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { MAIN_ACTION } from '@/lib/site';
 
 export default function NotFound() {
   return (
-    <section className="page-hero" style={{ minHeight: '70svh', display: 'grid', alignItems: 'center' }} aria-labelledby="nf-h">
-      <div className="hero__bg" aria-hidden="true" />
-      <div className="wrap" style={{ display: 'grid', gap: 24, justifyItems: 'start' }}>
-        <p className="eyebrow" style={{ margin: 0 }}>404</p>
-        <h1 className="h1" id="nf-h">This road doesn&rsquo;t go anywhere.</h1>
-        <p className="lead">The page you were looking for has moved or never existed. Let&rsquo;s get you back on track.</p>
-        <div className="hero__ctas">
-          <Link className="btn btn--primary btn--xl" href="/">
-            Back to home <ArrowRight className="arrow" aria-hidden="true" />
+    <section className="page-head" style={{ minHeight: '80svh' }} aria-labelledby="nf-h">
+      <div className="wrap" style={{ display: 'grid', gap: 'var(--s-5)', justifyItems: 'start', maxWidth: 720, marginInline: 'auto' }}>
+        <p className="t-label muted">Page not found (404)</p>
+        <h1 className="t-h1" id="nf-h">
+          This page has moved or never existed
+        </h1>
+        <p className="t-lead muted">Every service, the builds and the way to the shop are on the home page.</p>
+        <div className="page-head__actions">
+          <Link className="btn btn--primary" href="/">
+            Go to the home page <ArrowRight className="arrow" aria-hidden="true" />
           </Link>
-          <Link className="btn btn--xl" href="/#book">
-            Consult now
+          <Link className="btn" href="/#book">
+            {MAIN_ACTION}
           </Link>
         </div>
       </div>

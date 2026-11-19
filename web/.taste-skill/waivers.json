@@ -1,0 +1,7 @@
+[
+  { "check": "street-number", "target": "1-8-32/70", "reason": "Real client: the brief gives the verified address from the Google Business listing; the house number belongs in the LocalBusiness search data." },
+  { "check": "coordinates", "target": "iframe", "reason": "Real client: the owner supplied this Google Maps embed and asked for it on the page; its URL carries the pin." },
+  { "check": "phone-number", "target": "+91 70131 46997", "reason": "Real client: the brief gives the shop's own phone and WhatsApp number; calling is the main way customers book." },
+  { "check": "button-styles", "target": "(the page)", "reason": "The nav bar is the shopfront's black fascia; its button takes the signboard yellow because the black primary would vanish on it. One primary, one secondary elsewhere." },
+  { "check": "map-link", "target": "Ujwal Raj", "reason": "Real Google reviews: each card opens that exact review on Google Maps, as the client asked; it is not a directions link." }
+]

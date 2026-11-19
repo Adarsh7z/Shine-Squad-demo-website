@@ -1,20 +1,34 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowRight, Check, Phone } from 'lucide-react';
-import { SITE_URL, business, getService, groups, links, services } from '@/lib/site';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { MAIN_ACTION, SITE_URL, business, getService, groups, links, serviceLabels, services } from '@/lib/site';
 import { getReviews } from '@/lib/reviews';
-import { Glyph } from '@/components/Icons';
-import ConsultForm from '@/components/ConsultForm';
-import Faq from '@/components/sections/Faq';
 import Reviews from '@/components/sections/Reviews';
-import FinalCta from '@/components/sections/FinalCta';
+import Booking from '@/components/sections/Booking';
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
   return services.map((s) => ({ slug: s.slug }));
 }
+
+/** One photograph per service, from the owner's store photos and the bay's build stills. */
+const photo: Record<string, { src: string; alt: string }> = {
+  'ceramic-coating': { src: '/images/builds/pQ68arJMB6w.webp', alt: 'Silver Mahindra XUV700 under the hexagon lights of the detailing bay' },
+  'paint-protection-film': { src: '/images/builds/i20-studio.webp', alt: 'Red Hyundai i20 with a deep gloss under the bay lights' },
+  'teflon-coating': { src: '/images/builds/5pT7spDdFXU.webp', alt: 'White Maruti Grand Vitara with a fresh polish' },
+  'car-wrapping': { src: '/images/builds/i20-studio.webp', alt: 'Red Hyundai i20 in the detailing bay' },
+  'window-tinting': { src: '/images/store/storefront-xuv700.webp', alt: 'Black Mahindra XUV700 with tinted windows outside the shop' },
+  'detail-spa-restoration': { src: '/images/store/care-products.webp', alt: 'Shelves of Turtle Wax car-care products' },
+  'audio-video': { src: '/images/store/audio-shelf.webp', alt: 'Shelf of JBL and Moco speakers and amplifiers' },
+  'seat-covers-mats': { src: '/images/store/seat-covers-wall.webp', alt: 'Wall of seat covers and floor mats in the showroom' },
+  'lighting-upgrades': { src: '/images/store/lighting-shelf.webp', alt: 'Shelf of LED headlamps and tail lamps' },
+  'alloy-wheels': { src: '/images/store/alloy-wheels-wall.webp', alt: 'Wall of alloy wheels in the showroom' },
+  'electrical-headlight-repair': { src: '/images/store/lighting-shelf.webp', alt: 'Shelf of headlamps and lighting parts' },
+  maintenance: { src: '/images/store/care-products.webp', alt: 'Shelves of car-care products and oils' },
+};
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -36,7 +50,8 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
   const s = getService(slug);
   if (!s) notFound();
   const reviews = await getReviews();
-  const related = services.filter((x) => x.group === s.group && x.slug !== s.slug).slice(0, 3);
+  const related = services.filter((x) => x.group === s.group && x.slug !== s.slug);
+  const pic = photo[s.slug];
 
   const ld = [
     {
@@ -67,100 +82,105 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
   return (
     <>
-      <section className="page-hero" aria-labelledby="svc-h">
-        <div className="hero__bg" aria-hidden="true" />
-        <div className="wrap">
-          <nav className="crumbs" aria-label="Breadcrumb">
-            <Link className="link link--bare" href="/">Home</Link> <span aria-hidden="true">/</span>
-            <Link className="link link--bare" href="/#services">{groups[s.group].title}</Link> <span aria-hidden="true">/</span>
-            <span aria-current="page">{s.name}</span>
-          </nav>
-          <div className="page-hero__grid">
-            <div style={{ display: 'grid', gap: 24 }}>
-              <Glyph name={s.glyph} style={{ width: 40, height: 40, color: 'var(--signal)' }} />
-              <h1 className="h1" id="svc-h" style={{ fontSize: 'clamp(2.4rem, 4vw + 0.8rem, 4.6rem)' }}>
-                {s.name} <span className="text-signal">in Secunderabad</span>
-              </h1>
-              <p className="lead">{s.intro}</p>
-              <div className="hero__ctas">
-                <a href="#svc-book" className="btn btn--primary btn--xl">
-                  Get a free consultation <ArrowRight className="arrow" aria-hidden="true" />
-                </a>
-                <a href={links.tel} className="btn btn--xl" data-track="click_call">
-                  <Phone aria-hidden="true" /> {business.phoneDisplay}
-                </a>
-              </div>
+      <section className="page-head" aria-labelledby="svc-h">
+        <div className="wrap grid split">
+          <div style={{ display: 'grid', gap: 'var(--s-5)', alignContent: 'start', justifyItems: 'start' }}>
+            <Link className="crumb" href="/#services">
+              <ArrowLeft aria-hidden="true" /> All services
+            </Link>
+            <h1 className="t-h1" id="svc-h">
+              {s.name}
+            </h1>
+            <p className="t-lead muted" style={{ maxWidth: '46ch' }}>
+              {s.intro}
+            </p>
+            <div className="page-head__actions">
+              <a href="#book" className="btn btn--primary">
+                {MAIN_ACTION} <ArrowRight className="arrow" aria-hidden="true" />
+              </a>
+              <a href={links.tel} className="btn" data-track="click_call">
+                Call {business.phoneDisplay}
+              </a>
             </div>
-            <div id="svc-book">
-              <ConsultForm source={`service:${s.slug}`} service={s.name} />
-            </div>
+          </div>
+          <div className="ph" style={{ aspectRatio: '4 / 5' }}>
+            <Image src={pic.src} alt={pic.alt} fill priority sizes="(min-width: 1024px) 588px, 100vw" />
           </div>
         </div>
       </section>
 
-      <section className="section" aria-labelledby="inc-h">
-        <div className="wrap two-col">
-          <div>
-            <p className="eyebrow">The work</p>
-            <h2 className="h2" id="inc-h">What&rsquo;s included</h2>
-            <p className="lead" style={{ marginTop: 20 }}>
-              The exact scope and price depend on your car and its condition. We inspect it first and agree everything with you before work starts.
-            </p>
+      <section className="block--alt" aria-labelledby="inc-h">
+        <div className="wrap grid split">
+          <div style={{ display: 'grid', gap: 'var(--s-4)', alignContent: 'start' }}>
+            <h2 className="t-h2" id="inc-h">
+              What the work includes
+            </h2>
+            <p className="muted">We inspect your car first, then agree the exact scope, price and ready time with you before any work starts.</p>
           </div>
-          <ul className="check-list">
-            {s.includes.map((i) => (
-              <li key={i}>
-                <Check aria-hidden="true" /> {i}
+          <ol className="ruled">
+            {s.includes.map((item, i) => (
+              <li key={item}>
+                <span className="n">{String(i + 1).padStart(2, '0')}</span>
+                <span>{item}</span>
               </li>
             ))}
-          </ul>
+          </ol>
         </div>
       </section>
 
-      <section className="section section--raised hairline-top" aria-labelledby="why-h">
-        <div className="wrap">
-          <p className="eyebrow">Why it matters</p>
-          <h2 className="h2" id="why-h" style={{ marginBottom: 48 }}>
-            What you get from it
+      <section className="block" aria-labelledby="why-h">
+        <div className="wrap grid split">
+          <h2 className="t-h2" id="why-h">
+            What you get from {serviceLabels[s.slug].toLowerCase()}
           </h2>
-          <div className="why-grid">
-            {s.why.map((w, i) => (
-              <div className="card" key={w.title}>
-                <span className="mono text-signal">0{i + 1}</span>
-                <h3 className="h3">{w.title}</h3>
-                <p className="body">{w.body}</p>
+          <div className="why">
+            {s.why.map((w) => (
+              <div key={w.title}>
+                <h3>{w.title}</h3>
+                <p>{w.body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <Reviews data={reviews} />
-      <Faq items={s.faqs} title={`${s.name}: common questions`} id="svc-faq" />
+      <section className="block" aria-labelledby="qa-h">
+        <div className="wrap grid split">
+          <h2 className="t-h2" id="qa-h">
+            Questions about {serviceLabels[s.slug].toLowerCase()}
+          </h2>
+          <div className="qa">
+            {s.faqs.map((f) => (
+              <div key={f.q}>
+                <h3>{f.q}</h3>
+                <p>{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {related.length > 0 && (
-        <section className="section" aria-labelledby="rel-h">
-          <div className="wrap">
-            <p className="eyebrow">Also in {groups[s.group].title}</p>
-            <h2 className="h2" id="rel-h" style={{ marginBottom: 40 }}>
-              Related services
+        <section className="block" aria-labelledby="rel-h">
+          <div className="wrap grid split">
+            <h2 className="t-h2" id="rel-h">
+              More in {groups[s.group].title.toLowerCase()}
             </h2>
-            <div className="related">
+            <ul className="rows">
               {related.map((r) => (
-                <Link key={r.slug} href={`/services/${r.slug}`} className="card card--link gloss">
-                  <Glyph name={r.glyph} className="glyph" />
-                  <strong style={{ fontWeight: 600 }}>{r.name}</strong>
-                  <span className="body" style={{ fontSize: '0.92rem' }}>{r.short}</span>
-                  <span className="link" style={{ color: 'var(--signal)', justifySelf: 'start' }}>
-                    Learn more <ArrowRight className="arrow" aria-hidden="true" />
-                  </span>
-                </Link>
+                <li key={r.slug}>
+                  <Link href={`/services/${r.slug}`}>
+                    {serviceLabels[r.slug]} <ArrowRight aria-hidden="true" />
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
       )}
-      <FinalCta />
+
+      <Reviews data={reviews} />
+      <Booking source={`service:${s.slug}`} service={s.name} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
     </>
   );

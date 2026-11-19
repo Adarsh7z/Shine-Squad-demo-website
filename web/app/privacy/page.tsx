@@ -9,13 +9,12 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <section className="section" aria-labelledby="privacy-h">
+    <section className="page-head" aria-labelledby="privacy-h">
       <div className="wrap">
-        <p className="eyebrow">Privacy</p>
-        <h1 className="h2" id="privacy-h">Your details, in plain words</h1>
-        <div className="prose" style={{ marginTop: 32 }}>
+        <h1 className="t-h1" id="privacy-h">Privacy at Shine Squad</h1>
+        <div className="prose" style={{ marginTop: 48 }}>
           <h2>What happens when you consult us</h2>
-          <p>The consultation form doesn&rsquo;t send or store anything on this website. When you tap &ldquo;Consult on WhatsApp&rdquo;, it opens WhatsApp with a message containing the details you typed (your name, phone number and, if you add them, your car and the services you&rsquo;re interested in). Nothing is shared until you press Send in WhatsApp yourself.</p>
+          <p>The consultation form doesn&rsquo;t send or store anything on this website. When you tap &ldquo;Book a free consultation&rdquo;, it opens WhatsApp with a message containing the details you typed (your name, phone number and, if you add them, your car and the services you&rsquo;re interested in). Nothing is shared until you press Send in WhatsApp yourself.</p>
           <h2>How we use it</h2>
           <p>Only to reply to you about your car. We don&rsquo;t sell your details, share them with advertisers, or add you to marketing lists.</p>
           <h2>Deleting your details</h2>

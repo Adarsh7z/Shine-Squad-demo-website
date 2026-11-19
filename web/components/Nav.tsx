@@ -1,53 +1,52 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowRight, ChevronDown, Menu, Phone, X, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ChevronDown, Menu, Phone, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { business, groups, links, services, whatsappLink, type ServiceGroup } from '@/lib/site';
-import { Glyph, WhatsApp } from './Icons';
+import { MAIN_ACTION, business, links, serviceLabels, services } from '@/lib/site';
 import Wordmark from './Wordmark';
 import OpenStatus from './OpenStatus';
 
 const navLinks = [
   { href: '/#builds', label: 'Builds' },
-  { href: '/#accessories', label: 'Accessories' },
   { href: '/#reviews', label: 'Reviews' },
   { href: '/#visit', label: 'Visit' },
-  { href: '/#faq', label: 'FAQ' },
 ];
 
+const cards = [
+  { slug: 'ceramic-coating', image: '/images/builds/pQ68arJMB6w.webp', alt: 'Silver Mahindra XUV700 under the hexagon lights of the detailing bay' },
+  { slug: 'paint-protection-film', image: '/images/builds/i20-studio.webp', alt: 'Red Hyundai i20 with a fresh gloss under the bay lights' },
+  { slug: 'seat-covers-mats', image: '/images/store/seat-covers-wall.webp', alt: 'Wall of seat covers and floor mats in the showroom' },
+  { slug: 'audio-video', image: '/images/store/audio-shelf.webp', alt: 'Shelf of JBL and Moco speakers and amplifiers' },
+];
+
+const ease = [0.23, 1, 0.32, 1] as const;
+
 export default function Nav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mega, setMega] = useState(false);
-  const [sheet, setSheet] = useState(false);
+  const [panel, setPanel] = useState(false);
+  const [menu, setMenu] = useState(false);
   const reduce = useReducedMotion();
   const intent = useRef<number | undefined>(undefined);
   const hoverOpened = useRef(false);
-  const megaBtn = useRef<HTMLButtonElement>(null);
-  const megaPanel = useRef<HTMLDivElement>(null);
-  const sheetFirst = useRef<HTMLAnchorElement>(null);
+  const panelBtn = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const menuFirst = useRef<HTMLAnchorElement>(null);
   const burger = useRef<HTMLButtonElement>(null);
 
+  // Escape and outside click close the services panel
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  // Close mega on Escape / outside click
-  useEffect(() => {
-    if (!mega) return;
+    if (!panel) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        setMega(false);
-        megaBtn.current?.focus();
+        setPanel(false);
+        panelBtn.current?.focus();
       }
     };
     const onDown = (e: MouseEvent) => {
       const t = e.target as Node;
-      if (!megaPanel.current?.contains(t) && !megaBtn.current?.contains(t)) setMega(false);
+      if (!panelRef.current?.contains(t) && !panelBtn.current?.contains(t)) setPanel(false);
     };
     document.addEventListener('keydown', onKey);
     document.addEventListener('mousedown', onDown);
@@ -55,15 +54,15 @@ export default function Nav() {
       document.removeEventListener('keydown', onKey);
       document.removeEventListener('mousedown', onDown);
     };
-  }, [mega]);
+  }, [panel]);
 
-  // Mobile sheet: lock scroll, focus first link, Escape closes
+  // Full-screen menu: lock scroll, focus the first link, Escape closes, focus returns to the button
   useEffect(() => {
-    if (!sheet) return;
+    if (!menu) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    const t = window.setTimeout(() => sheetFirst.current?.focus(), 60);
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setSheet(false);
+    const t = window.setTimeout(() => menuFirst.current?.focus(), 60);
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMenu(false);
     document.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = prev;
@@ -71,105 +70,108 @@ export default function Nav() {
       document.removeEventListener('keydown', onKey);
       burger.current?.focus();
     };
-  }, [sheet]);
+  }, [menu]);
 
   const openSoon = useCallback(() => {
     window.clearTimeout(intent.current);
     intent.current = window.setTimeout(() => {
       hoverOpened.current = true;
-      setMega(true);
+      setPanel(true);
     }, 120);
   }, []);
   const closeSoon = useCallback(() => {
     window.clearTimeout(intent.current);
     intent.current = window.setTimeout(() => {
       hoverOpened.current = false;
-      setMega(false);
-    }, 160);
+      setPanel(false);
+    }, 180);
   }, []);
-
-  const order: ServiceGroup[] = ['protection', 'upgrades', 'restoration'];
+  const close = () => setPanel(false);
+  const closeMenu = () => setMenu(false);
 
   return (
     <>
-      <header className="nav" data-scrolled={scrolled || mega} onMouseLeave={closeSoon}>
+      <header className="nav" onMouseLeave={closeSoon}>
         <div className="wrap nav__inner">
-          <Wordmark />
+          <a href="#main" className="skip-link">
+            Skip to content
+          </a>
+          <Wordmark sub={false} />
           <nav className="nav__links" aria-label="Main">
             <button
-              ref={megaBtn}
+              ref={panelBtn}
               className="nav__link"
-              aria-expanded={mega}
-              aria-controls="mega-services"
+              aria-expanded={panel}
+              aria-controls="nav-services"
               onClick={() => {
                 window.clearTimeout(intent.current);
-                // A click right after hover-open keeps it open instead of toggling it shut.
-                setMega((v) => (hoverOpened.current ? true : !v));
+                // A click right after a hover-open keeps the panel open instead of shutting it.
+                setPanel((v) => (hoverOpened.current ? true : !v));
                 hoverOpened.current = false;
               }}
               onMouseEnter={openSoon}
             >
-              Services <ChevronDown aria-hidden="true" />
+              <span className="draw">Services</span> <ChevronDown aria-hidden="true" />
             </button>
             {navLinks.map((l) => (
-              <Link key={l.href} href={l.href} className="nav__link" onMouseEnter={closeSoon}>
-                {l.label}
+              <Link key={l.href} href={l.href} className="nav__link" onMouseEnter={closeSoon} onFocus={close}>
+                <span className="draw">{l.label}</span>
               </Link>
             ))}
           </nav>
           <div className="nav__actions">
-            <a href={links.tel} className="icon-btn" aria-label={`Call ${business.phoneDisplay}`} title={business.phoneDisplay} data-track="click_call">
+            <a href={links.tel} className="nav__tel" data-track="click_call">
+              <Phone aria-hidden="true" /> {business.phoneDisplay}
+            </a>
+            <Link href="/#book" className="btn btn--signal btn--sm nav__book">
+              {MAIN_ACTION} <ArrowRight className="arrow" aria-hidden="true" />
+            </Link>
+            <a href={links.tel} className="icon-btn nav__call" aria-label={`Call ${business.phoneDisplay}`} data-track="click_call">
               <Phone aria-hidden="true" />
             </a>
-            <Link href="/#book" className="btn btn--primary nav__book">
-              Consult now <ArrowRight className="arrow" aria-hidden="true" />
-            </Link>
-            <button ref={burger} className="icon-btn nav__burger" aria-label="Open menu" aria-expanded={sheet} onClick={() => setSheet(true)}>
+            <button ref={burger} className="icon-btn nav__menu" aria-label="Open menu" aria-expanded={menu} aria-controls="menu" onClick={() => setMenu(true)}>
               <Menu aria-hidden="true" />
             </button>
           </div>
         </div>
 
         <AnimatePresence>
-          {mega && (
+          {panel && (
             <motion.div
-              id="mega-services"
-              ref={megaPanel}
-              className="mega"
-              initial={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }}
+              id="nav-services"
+              ref={panelRef}
+              className="navpanel"
+              initial={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4, transition: { duration: 0.12 } }}
-              transition={{ duration: 0.22, ease: [0.2, 0.8, 0.2, 1] }}
+              exit={{ opacity: 0, transition: { duration: 0.12 } }}
+              transition={{ duration: 0.24, ease }}
               onMouseEnter={() => window.clearTimeout(intent.current)}
             >
-              <div className="wrap mega__grid">
-                {order.map((g) => (
-                  <div className="mega__col" key={g}>
-                    <h3 className="mono" style={{ color: 'var(--smoke)' }}>{groups[g].title}</h3>
+              <div className="wrap">
+                <div className="navpanel__grid">
+                  {cards.map((c) => {
+                    const s = services.find((x) => x.slug === c.slug)!;
+                    return (
+                      <Link key={c.slug} href={`/services/${c.slug}`} className="navcard lift" onClick={close}>
+                        <span className="ph ph--link">
+                          <Image src={c.image} alt={c.alt} fill sizes="280px" />
+                        </span>
+                        <span className="navcard__name">{serviceLabels[c.slug]}</span>
+                        <span className="navcard__line">{s.short}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+                <div className="navpanel__foot">
+                  <div className="navpanel__all">
                     {services
-                      .filter((s) => s.group === g)
+                      .filter((s) => !cards.some((c) => c.slug === s.slug))
                       .map((s) => (
-                        <Link key={s.slug} href={`/services/${s.slug}`} className="mega__item" onClick={() => setMega(false)}>
-                          <Glyph name={s.glyph} />
-                          <span>
-                            <strong>{s.name}</strong>
-                            <span>{s.short}</span>
-                          </span>
+                        <Link key={s.slug} href={`/services/${s.slug}`} onClick={close}>
+                          {serviceLabels[s.slug]}
                         </Link>
                       ))}
                   </div>
-                ))}
-                <div className="card mega__promo">
-                  <div>
-                    <p className="eyebrow">Free consultation</p>
-                    <p className="h3">Not sure what your car needs?</p>
-                    <p className="body" style={{ marginTop: 10 }}>
-                      Come in and see coatings, films and materials on real samples. No obligation.
-                    </p>
-                  </div>
-                  <Link href="/#book" className="btn btn--primary" onClick={() => setMega(false)}>
-                    Consult now <ArrowRight className="arrow" aria-hidden="true" />
-                  </Link>
                 </div>
               </div>
             </motion.div>
@@ -178,45 +180,48 @@ export default function Nav() {
       </header>
 
       <AnimatePresence>
-        {sheet && (
+        {menu && (
           <motion.div
-            className="sheet"
+            id="menu"
+            className="menu"
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -16 }}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}
-            transition={{ duration: 0.26, ease: [0.2, 0.8, 0.2, 1] }}
+            exit={{ opacity: 0, transition: { duration: 0.14 } }}
+            transition={{ duration: 0.26, ease }}
           >
-            <div className="sheet__head">
-              <Wordmark />
-              <button className="icon-btn" aria-label="Close menu" onClick={() => setSheet(false)}>
-                <X aria-hidden="true" />
-              </button>
+            <div className="menu__head">
+              <div className="wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Wordmark sub={false} onClick={closeMenu} />
+                <button className="icon-btn" aria-label="Close menu" onClick={closeMenu}>
+                  <X aria-hidden="true" />
+                </button>
+              </div>
             </div>
-            <nav className="sheet__links" aria-label="Mobile">
-              <Link ref={sheetFirst} href="/#services" onClick={() => setSheet(false)}>
+            <nav className="wrap menu__links" aria-label="Menu">
+              <Link ref={menuFirst} href="/#services" onClick={closeMenu}>
                 Services <ArrowUpRight aria-hidden="true" />
               </Link>
               {navLinks.map((l) => (
-                <Link key={l.href} href={l.href} onClick={() => setSheet(false)}>
+                <Link key={l.href} href={l.href} onClick={closeMenu}>
                   {l.label} <ArrowUpRight aria-hidden="true" />
                 </Link>
               ))}
-              <Link href="/contact" onClick={() => setSheet(false)}>
+              <Link href="/contact" onClick={closeMenu}>
                 Contact <ArrowUpRight aria-hidden="true" />
               </Link>
             </nav>
-            <div className="sheet__foot">
-              <p className="mono" style={{ color: 'var(--mist)', margin: 0 }}>
+            <div className="wrap menu__foot">
+              <p className="menu__status">
                 <OpenStatus />
               </p>
-              <a href={links.tel} className="btn btn--primary btn--xl btn--block" data-track="click_call">
+              <Link href="/#book" className="btn btn--primary btn--block" onClick={closeMenu}>
+                {MAIN_ACTION} <ArrowRight className="arrow" aria-hidden="true" />
+              </Link>
+              <a href={links.tel} className="btn btn--block" data-track="click_call">
                 <Phone aria-hidden="true" /> Call {business.phoneDisplay}
-              </a>
-              <a href={whatsappLink('Hi Shine Squad, I would like to book a free consultation.')} target="_blank" rel="noopener noreferrer" className="btn btn--xl btn--block" data-track="click_whatsapp">
-                <WhatsApp style={{ color: '#25D366' }} /> WhatsApp us
               </a>
             </div>
           </motion.div>

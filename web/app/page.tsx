@@ -1,39 +1,26 @@
 import Hero from '@/components/Hero';
-import ProofStrip from '@/components/sections/ProofStrip';
-import Services from '@/components/sections/Services';
-import Layers from '@/components/sections/Layers';
-import Builds from '@/components/sections/Builds';
-import Accessories from '@/components/sections/Accessories';
-import Process from '@/components/sections/Process';
-import Reviews from '@/components/sections/Reviews';
 import Visit from '@/components/sections/Visit';
-import Faq from '@/components/sections/Faq';
-import FinalCta from '@/components/sections/FinalCta';
+import Services from '@/components/sections/Services';
+import Builds from '@/components/sections/Builds';
+import Reviews from '@/components/sections/Reviews';
+import Booking from '@/components/sections/Booking';
 import { getReviews } from '@/lib/reviews';
-import { faqs } from '@/lib/site';
 
-
+/*
+  tasteskill plan (place): hero · visit · services (tall-small) · builds (photo-chapters) · reviews · booking · footer.
+  Deal: brand colours from the shopfront, Albert Sans, nav-cards, footer-columns, surface-pairs, arrow buttons,
+  the client's own mark, type moment "name" (footer). Full plan: .taste-skill/plan.md
+*/
 export default async function Home() {
   const reviews = await getReviews();
-  const faqLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
-  };
   return (
     <>
-      <Hero rating={reviews.rating} count={reviews.count} />
-      <ProofStrip rating={reviews.rating} count={reviews.count} />
-      <Services />
-      <Layers />
-      <Builds />
-      <Accessories />
-      <Process />
-      <Reviews data={reviews} />
+      <Hero />
       <Visit />
-      <Faq items={faqs} />
-      <FinalCta />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <Services />
+      <Builds />
+      <Reviews data={reviews} />
+      <Booking />
     </>
   );
 }
