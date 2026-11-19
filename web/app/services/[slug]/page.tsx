@@ -83,39 +83,39 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <section className="page-head" aria-labelledby="svc-h">
-        <div className="wrap grid split">
-          <div style={{ display: 'grid', gap: 'var(--s-5)', alignContent: 'start', justifyItems: 'start' }}>
+        <div className="wrap page-head__grid">
+          <div>
             <Link className="crumb" href="/#services">
               <ArrowLeft aria-hidden="true" /> All services
             </Link>
-            <h1 className="t-h1" id="svc-h">
+            <h1 className="serif t-xl" id="svc-h" data-lines>
               {s.name}
             </h1>
-            <p className="t-lead muted" style={{ maxWidth: '46ch' }}>
+            <p className="lede" style={{ maxWidth: '46ch', fontSize: 17 }}>
               {s.intro}
             </p>
             <div className="page-head__actions">
-              <a href="#book" className="btn btn--primary">
-                {MAIN_ACTION} <ArrowRight className="arrow" aria-hidden="true" />
+              <a href="#book" className="cta cta--solid">
+                {MAIN_ACTION} <ArrowRight aria-hidden="true" />
               </a>
-              <a href={links.tel} className="btn" data-track="click_call">
+              <a href={links.tel} className="cta" data-track="click_call">
                 Call {business.phoneDisplay}
               </a>
             </div>
           </div>
-          <div className="ph" style={{ aspectRatio: '4 / 5' }}>
+          <div className="page-photo" data-fade>
             <Image src={pic.src} alt={pic.alt} fill priority sizes="(min-width: 1024px) 588px, 100vw" />
           </div>
         </div>
       </section>
 
-      <section className="block--alt" aria-labelledby="inc-h">
-        <div className="wrap grid split">
-          <div style={{ display: 'grid', gap: 'var(--s-4)', alignContent: 'start' }}>
-            <h2 className="t-h2" id="inc-h">
+      <section className="block" aria-labelledby="inc-h">
+        <div className="wrap split">
+          <div>
+            <h2 className="serif t-l" id="inc-h" data-lines>
               What the work includes
             </h2>
-            <p className="muted">We inspect your car first, then agree the exact scope, price and ready time with you before any work starts.</p>
+            <p className="lede">We inspect your car first, then agree the exact scope, price and ready time with you before any work starts.</p>
           </div>
           <ol className="ruled">
             {s.includes.map((item, i) => (
@@ -129,8 +129,8 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       </section>
 
       <section className="block" aria-labelledby="why-h">
-        <div className="wrap grid split">
-          <h2 className="t-h2" id="why-h">
+        <div className="wrap split">
+          <h2 className="serif t-l" data-lines id="why-h">
             What you get from {serviceLabels[s.slug].toLowerCase()}
           </h2>
           <div className="why">
@@ -145,8 +145,8 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       </section>
 
       <section className="block" aria-labelledby="qa-h">
-        <div className="wrap grid split">
-          <h2 className="t-h2" id="qa-h">
+        <div className="wrap split">
+          <h2 className="serif t-l" data-lines id="qa-h">
             Questions about {serviceLabels[s.slug].toLowerCase()}
           </h2>
           <div className="qa">
@@ -162,8 +162,8 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
       {related.length > 0 && (
         <section className="block" aria-labelledby="rel-h">
-          <div className="wrap grid split">
-            <h2 className="t-h2" id="rel-h">
+          <div className="wrap split">
+            <h2 className="serif t-l" data-lines id="rel-h">
               More in {groups[s.group].title.toLowerCase()}
             </h2>
             <ul className="rows">

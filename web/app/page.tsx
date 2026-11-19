@@ -1,25 +1,28 @@
-import Hero from '@/components/Hero';
-import Visit from '@/components/sections/Visit';
-import Services from '@/components/sections/Services';
-import Builds from '@/components/sections/Builds';
+import { Approach, Builds, Dull, Hero, Manifesto, Services, Statement, Steps } from '@/components/home/Sections';
 import Reviews from '@/components/sections/Reviews';
+import Visit from '@/components/sections/Visit';
 import Booking from '@/components/sections/Booking';
 import { getReviews } from '@/lib/reviews';
 
 /*
-  tasteskill plan (place): hero · visit · services (tall-small) · builds (photo-chapters) · reviews · booking · footer.
-  Deal: brand colours from the shopfront, Albert Sans, nav-cards, footer-columns, surface-pairs, arrow buttons,
-  the client's own mark, type moment "name" (footer). Full plan: .taste-skill/plan.md
+  A cinematic, scroll-driven home page (GSAP + ScrollTrigger + SplitText, Lenis smooth scroll; components/Motion.tsx):
+  hero · statement with a photo trail · approach · three pinned steps · manifesto · pinned services ·
+  "Dull / Ends Here" · previous builds · reviews · visit + map · booking (WhatsApp) · finale (footer).
 */
 export default async function Home() {
   const reviews = await getReviews();
   return (
     <>
       <Hero />
-      <Visit />
+      <Statement />
+      <Approach />
+      <Steps />
+      <Manifesto />
       <Services />
+      <Dull />
       <Builds />
       <Reviews data={reviews} />
+      <Visit />
       <Booking />
     </>
   );

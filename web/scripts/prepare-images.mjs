@@ -85,6 +85,42 @@ for (const [id, name, x0, y0, x1, y1] of crops) {
   console.log('crop', name);
 }
 
+// Cinematic set for the dark site: one grade (deeper blacks, a touch less colour) so studio,
+// dusk and daylight shots sit together on black. [source, output, x0, y0, x1, y1] as shares.
+function cine(img) {
+  return img.modulate({ saturation: 0.88, brightness: 0.86 }).linear(1.14, -14);
+}
+await mkdir(path.join(out, 'cine'), { recursive: true });
+const cineSet = [
+  [path.join(yt, 'wUas6KK3rPU.jpg'), 'i20', 0, 0, 1, 0.7], // red i20 under the hexagon lights
+  [path.join(yt, 'pQ68arJMB6w.jpg'), 'xuv700', 0, 0, 1, 1], // silver XUV700 in the bay
+  [path.join(yt, 'EWiajQ6AL_U.jpg'), 'thar', 0.04, 0.385, 0.97, 0.75], // two black Thar Roxx at dusk, captions cut off
+  [path.join(yt, '5pT7spDdFXU.jpg'), 'vitara', 0, 0, 1, 1], // Grand Vitara after its interior refit
+  [path.join(yt, 'vb7L3t6O2AY.jpg'), 'showroom', 0, 0.125, 1, 0.89], // signboard and open shop floor
+];
+for (const [file, name, x0, y0, x1, y1] of cineSet) {
+  const m = await sharp(file).metadata();
+  const box = { left: Math.round(m.width * x0), top: Math.round(m.height * y0), width: Math.round(m.width * (x1 - x0)), height: Math.round(m.height * (y1 - y0)) };
+  for (const w of [828, 1280]) {
+    await cine(sharp(file).extract(box)).resize({ width: w, withoutEnlargement: true }).webp({ quality: 76, effort: 6 }).toFile(path.join(out, 'cine', `${name}-${w}.webp`));
+  }
+  console.log('cine', name);
+}
+// The owner's store photos, graded the same way (portrait, 708 px wide at most).
+for (const [file, name] of [...store, ['01-storefront-xuv700-signboard.webp', 'storefront-sign']]) {
+  const input = path.join(src, 'photos', file);
+  let img = sharp(input);
+  if (name === 'storefront-sign') {
+    const m = await sharp(input).metadata();
+    const top = Math.round(m.height * 0.225);
+    img = sharp(input).extract({ left: 0, top, width: m.width, height: m.height - top });
+  }
+  for (const w of [480, 708]) {
+    await cine(img.clone()).resize({ width: w, withoutEnlargement: true }).webp({ quality: 74, effort: 6 }).toFile(path.join(out, 'cine', `${name}-${w}.webp`));
+  }
+  console.log('cine', name);
+}
+
 // Open Graph image: storefront photo on the right, wordmark on black.
 const W = 1200, H = 630;
 const photo = await grade(sharp(path.join(src, 'photos', store[0][0])))

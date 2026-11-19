@@ -4,18 +4,20 @@ import { MAIN_ACTION } from '@/lib/site';
 
 export default function NotFound() {
   return (
-    <section className="page-head" style={{ minHeight: '80svh' }} aria-labelledby="nf-h">
-      <div className="wrap" style={{ display: 'grid', gap: 'var(--s-5)', justifyItems: 'start', maxWidth: 720, marginInline: 'auto' }}>
-        <p className="t-label muted">Page not found (404)</p>
-        <h1 className="t-h1" id="nf-h">
-          This page has moved or never existed
+    <section className="page-head" style={{ minHeight: '90svh', display: 'grid', alignItems: 'center' }} aria-labelledby="nf-h">
+      <div className="wrap" style={{ display: 'grid', gap: 26, justifyItems: 'center', textAlign: 'center' }}>
+        <p className="caps muted">Page not found · 404</p>
+        <h1 className="serif t-xl" id="nf-h">
+          This Road Ends Here
         </h1>
-        <p className="t-lead muted">Every service, the builds and the way to the shop are on the home page.</p>
-        <div className="page-head__actions">
-          <Link className="btn btn--primary" href="/">
-            Go to the home page <ArrowRight className="arrow" aria-hidden="true" />
+        <p className="lede" style={{ textAlign: 'center' }}>
+          Every service, the builds and the way to the shop are on the home page.
+        </p>
+        <div className="page-head__actions" style={{ justifyContent: 'center' }}>
+          <Link className="cta cta--solid" href="/">
+            Go to the home page <ArrowRight aria-hidden="true" />
           </Link>
-          <Link className="btn" href="/#book">
+          <Link className="cta" href="/#book">
             {MAIN_ACTION}
           </Link>
         </div>

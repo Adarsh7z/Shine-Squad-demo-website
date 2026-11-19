@@ -93,15 +93,15 @@ export default function ConsultForm({ source = 'home', service }: Props) {
           {sentUrl ? (
             <motion.div key="ok" className="success" role="status" aria-live="polite" transition={{ duration: 0.22, ease }} {...fade}>
               <div className="success__head">
-                <h3 className="t-h3">Opening WhatsApp{firstName ? `, ${firstName}` : ''}</h3>
+                <h3 className="serif t-m">Opening WhatsApp{firstName ? `, ${firstName}` : ''}</h3>
                 <p className="muted">Your message is ready. Press Send in WhatsApp and we reply during opening hours.</p>
               </div>
               <pre className="wa-preview" aria-label="Your WhatsApp message">{sentText}</pre>
               <div className="success__actions">
-                <a href={sentUrl} target="_blank" rel="noopener noreferrer" className="btn btn--primary" data-track="click_whatsapp">
+                <a href={sentUrl} target="_blank" rel="noopener noreferrer" className="cta cta--solid" data-track="click_whatsapp">
                   <WhatsApp /> Open WhatsApp again
                 </a>
-                <button type="button" className="btn" onClick={() => setSentUrl(null)}>
+                <button type="button" className="cta" onClick={() => setSentUrl(null)}>
                   <Pencil aria-hidden="true" /> Edit details
                 </button>
               </div>
@@ -187,7 +187,7 @@ export default function ConsultForm({ source = 'home', service }: Props) {
               <p className="sr-only" role="status" aria-live="polite">
                 {submitted && (nameErr || phoneErr) ? `Check the form: ${[nameErr, phoneErr].filter(Boolean).join(" ")}` : ""}
               </p>
-              <button type="submit" className="btn btn--primary btn--block">
+              <button type="submit" className="cta cta--solid cta--block">
                 {MAIN_ACTION} <ArrowRight className="arrow" aria-hidden="true" />
               </button>
               <p className="consult__fine">

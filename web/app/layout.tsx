@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from 'next';
-import { Albert_Sans } from 'next/font/google';
+import { Albert_Sans, Instrument_Serif } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import FloatingActions from '@/components/FloatingActions';
 import ClientEffects from '@/components/ClientEffects';
+import MotionLoader from '@/components/MotionLoader';
 import { SITE_URL, business, fullAddress, links } from '@/lib/site';
 
 // Archivo, instanced at width 125 (Expanded) with weights 700–800 and subset to Latin: ~19 KB instead of ~88 KB.
@@ -18,8 +19,9 @@ const archivo = localFont({
   declarations: [{ prop: 'font-stretch', value: '125%' }],
   fallback: ['Arial Black', 'Arial', 'sans-serif'],
 });
-// Albert Sans (the dealt pairing for a shop): text 400, buttons and labels 500.
-const albert = Albert_Sans({ subsets: ['latin'], weight: ['400', '500'], variable: '--f-albert', display: 'swap' });
+// Display: Instrument Serif (tall, high-contrast). Text and labels: Albert Sans.
+const serif = Instrument_Serif({ subsets: ['latin'], weight: '400', variable: '--f-serif', display: 'swap' });
+const albert = Albert_Sans({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--f-albert', display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -44,7 +46,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0d0d0d',
+  themeColor: '#070707',
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
@@ -86,26 +88,26 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" suppressHydrationWarning data-type="place" data-radius="soft" data-buttons="arrow" className={`${archivo.variable} ${albert.variable}`}>
+    <html lang="en-IN" suppressHydrationWarning className={`${archivo.variable} ${serif.variable} ${albert.variable}`}>
       <head>
-        {/* Mark JS early so entrance states apply before first paint; fall back to visible after 1.2s. */}
+        {/* Scroll motion runs only with script and without reduced motion; the class is set before first paint so pinned layouts don't jump. */}
         <script
           dangerouslySetInnerHTML={{
-            __html:
-              "document.documentElement.classList.add('js','m-enter');(function(){function go(){var h=document.querySelector('.hero[data-enter]');if(h)requestAnimationFrame(function(){requestAnimationFrame(function(){h.classList.add('is-entered')})})}if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go)})();",
+            __html: "if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('motion');",
           }}
         />
-        <meta name="page-type" content="place" />
-        <meta name="site-kind" content="other" />
-        <meta name="page-kind" content="place" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body>
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
         <Nav />
         <main id="main">{children}</main>
         <Footer />
         <FloatingActions />
         <ClientEffects />
+        <MotionLoader />
       </body>
     </html>
   );

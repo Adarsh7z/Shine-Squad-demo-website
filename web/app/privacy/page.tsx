@@ -11,7 +11,7 @@ export default function PrivacyPage() {
   return (
     <section className="page-head" aria-labelledby="privacy-h">
       <div className="wrap">
-        <h1 className="t-h1" id="privacy-h">Privacy at Shine Squad</h1>
+        <h1 className="serif t-xl" id="privacy-h">Privacy</h1>
         <div className="prose" style={{ marginTop: 48 }}>
           <h2>What happens when you consult us</h2>
           <p>The consultation form doesn&rsquo;t send or store anything on this website. When you tap &ldquo;Book a free consultation&rdquo;, it opens WhatsApp with a message containing the details you typed (your name, phone number and, if you add them, your car and the services you&rsquo;re interested in). Nothing is shared until you press Send in WhatsApp yourself.</p>

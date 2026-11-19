@@ -21,13 +21,12 @@ npx serve out        # optional: preview the exact files Cloudflare will host
 
 ## Design
 
-Built to the tasteskill rules for a shop people visit (a "place" page), with Emil Kowalski's motion rules:
+A dark, cinematic, scroll-driven site:
 
-- Colours from the shopfront itself: cream walls (`#f5f1e8`), the black fascia (the nav bar) and the signboard yellow. Type: Albert Sans; the logo keeps its signboard wordmark.
-- Home page, one section per screen: hero, visit (address, hours, the Google map), services, three builds told as scroll photo chapters, Google reviews, the booking form.
-- Square photographs with nothing written on them, one button style, hover effects only on devices with a mouse, nothing fading in on scroll.
-- The photo-chapters moment is tasteskill's own script (`public/assets/moments`, MIT), mounted after hydration by `components/MomentMount.tsx`; with reduced motion it shows the three photographs side by side.
-- The plan and the five deliberate exceptions (real address, phone, the owner's map embed, the yellow nav button, review deep links) are in `.taste-skill/`.
+- **Look:** black ground, warm white type, the signboard yellow only on the logo tile and focus rings. Display type Instrument Serif, text Albert Sans. Photos share one dark grade (`npm run images` writes them to `public/images/cine`).
+- **Home page scenes:** hero (blurred headline over the i20) · statement with a trail of photos · approach · three pinned steps (Inspect, Craft, Deliver) · manifesto whose words light up · pinned services with image wipes · "Dull / Ends Here" · previous builds · Google reviews · visit + map · WhatsApp booking · finale.
+- **Motion:** `components/Motion.tsx` (loaded after the page is interactive by `components/MotionLoader.tsx`) uses GSAP 3.13 with ScrollTrigger and SplitText, and Lenis for smooth scrolling. Pinned scenes snap to their steps.
+- **Accessibility:** with `prefers-reduced-motion` nothing animates or pins (the `html.motion` class is never set) and every scene reads complete. Hover effects only apply to real pointers.
 
 ## How "Book a free consultation" works (no backend)
 
